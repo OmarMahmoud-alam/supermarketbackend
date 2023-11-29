@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthoUserController;
+use App\Http\Controllers\Api\NewPasswordController;
+use App\Http\Controllers\Api\EmailVerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthoUserController::class, 'login']);
     Route::post('register', [AuthoUserController::class, 'register']);
@@ -23,4 +29,11 @@ Route::group(['prefix' => 'auth'], function () {
       Route::get('logout', [AuthoUserController::class, 'logoutonly']);
       //      
     });
+
 });
+Route::group(['middleware' => 'auth:sanctum'], function () {
+  Route::get('verify/otp/resend', [AuthoUserController::class, 'resendEmailVerificationOtp']);
+  Route::post('verifiedby/otp', [EmailVerificationController::class, 'email_verificationOtp']);
+  });
+  Route::post('forgot-password/otp', [NewPasswordController::class, 'forgetpasswordotp']);
+  Route::post('resetpassword/otp', [NewPasswordController::class, 'resetpasswordotp']);

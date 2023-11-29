@@ -1,15 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
 use Exception;
-use Validator;
-use App\Models\User;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Notifications\EmailVerificationNotificationOtp;
+use Illuminate\Support\Facades\Validator;
+use App\Notifications\EmailVerificationNotificaion;
 use Illuminate\Validation\Rules\Password as RulesPassword;
 
 class AuthoUserController extends Controller
@@ -41,7 +40,7 @@ class AuthoUserController extends Controller
         if($user->save()){
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->plainTextToken;
-            $user->notify(new EmailVerificationNotificationOtp);
+            $user->notify(new EmailVerificationNotificaion);
             return response()->json([
             'message' => 'Successfully created user!',
             'accessToken'=> $token,
@@ -55,7 +54,7 @@ class AuthoUserController extends Controller
     public function resendEmailVerificationOtp(){
         $user=auth('sanctum')->user();
 try{
-    $user->notify(new EmailVerificationNotificationOtp);
+    $user->notify(new EmailVerificationNotificaion);
     
     return response()->json(['message'=>'the otp send again','code'=>1]);
 }

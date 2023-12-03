@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('customs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->bigInteger('totalAmount');
-            $table->text('status'); // Corrected column definition
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->string('phone');
+            $table->date("date_of_birth");
+            $table->rememberToken();
             $table->timestamps();
-
-            // Foreign key relationship
-            $table->foreign('user_id')->references('id')->on('customs');
         });
     }
 
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('customs');
     }
 };

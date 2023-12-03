@@ -36,6 +36,14 @@ return [
     */
 
     'guards' => [
+       'customers' => [
+            'driver' => 'session',
+            'provider' => 'customs',
+        ],
+        'admins' => [
+            'driver' => 'sanctum',
+            'provider' => 'admins',
+        ],
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
@@ -64,7 +72,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
+        'customs' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Custom::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -93,6 +104,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'customs' => [
+            'provider' => 'customs',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

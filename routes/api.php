@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthoUserController;
+use App\Http\Controllers\Api\AuthCustomController;
 use App\Http\Controllers\Api\NewPasswordController;
 use App\Http\Controllers\Api\EmailVerificationController;
 
@@ -21,18 +22,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::group(['prefix' => 'auth'], function () {
-    Route::post('login', [AuthoUserController::class, 'login']);
-    Route::post('register', [AuthoUserController::class, 'register']);
+    Route::post('login', [AuthCustomController::class, 'login']);
+    Route::post('register', [AuthCustomController::class, 'register']);
 
     Route::group(['middleware' => 'auth:sanctum'], function() {
-      Route::get('logoutalldevices', [AuthoUserController::class, 'logout']);
-      Route::get('logout', [AuthoUserController::class, 'logoutonly']);
+      Route::get('logout', [AuthCustomController::class, 'logout']);
+      Route::get('logout2', [AuthCustomController::class, 'logoutonly']);
       //      
     });
 
 });
 Route::group(['middleware' => 'auth:sanctum'], function () {
-  Route::get('verify/otp/resend', [AuthoUserController::class, 'resendEmailVerificationOtp']);
+  Route::get('verify/otp/resend', [AuthCustomController::class, 'resendEmailVerificationOtp']);
   Route::post('verifiedby/otp', [EmailVerificationController::class, 'email_verificationOtp']);
   });
   Route::post('forgot-password/otp', [NewPasswordController::class, 'forgetpasswordotp']);

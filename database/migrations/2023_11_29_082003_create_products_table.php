@@ -17,8 +17,14 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->string('brand');
             $table->decimal('price', 10, 2);
-            $table->text('description');
+            $table->text('description')->nullable();
+            $table->bigInteger('quantity');
+            $table->string('image');
+
             $table->boolean('availability')->default(true);
+            $table->boolean('isvisible')->default(true);
+            $table->enum('type',['deliverable','inlocation'])->default('deliverable');
+
             $table->timestamps();
 
             // Foreign key relationship

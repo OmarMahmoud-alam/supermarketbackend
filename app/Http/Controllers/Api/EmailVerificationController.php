@@ -19,7 +19,7 @@ class EmailVerificationController extends Controller
     }
    public function email_verificationOtp(Request    $request){
     $validator=Validator::make( $request->all(),[
-        'email'=>['required','email','exists:App\Models\User,email'],
+        'email'=>['required','email','exists:App\Models\Custom,email'],
         'otp'=>['required','max:6'],
         ]); 
         

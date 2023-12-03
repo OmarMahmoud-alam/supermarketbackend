@@ -51,7 +51,7 @@ class Custom extends Authenticatable
     ];
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class, 'user_id');
+        return $this->hasMany(Order::class, 'custom_id');
     }
     public function addresse(): HasMany
     {

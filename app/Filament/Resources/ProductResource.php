@@ -31,9 +31,9 @@ use App\Filament\Resources\ProductResource\RelationManagers;
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?string $navigationGroup=  'Shop'; 
+    protected static ?string $recordTitleAttribute=  'name'; 
     protected static ?string $navigationLabel=  'Products'; 
     public static function form(Form $form): Form
     {
@@ -88,8 +88,8 @@ class ProductResource extends Resource
                 Tables\Columns\ImageColumn::make('image')->toggleable(),
                TextColumn::make('name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('brand')->searchable()->sortable()->toggleable(isToggledHiddenByDefault :true),
-                Tables\Columns\TextColumn::make('price')->sortable()->toggleable(),
-                Tables\Columns\TextColumn::make('quantity')->sortable()->toggleable(),
+                Tables\Columns\TextInputColumn::make('price')->sortable()->toggleable(),
+                Tables\Columns\TextInputColumn::make('quantity')->sortable()->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')->sortable()->toggleable(isToggledHiddenByDefault :true)->date(),
                 Tables\Columns\TextColumn::make('type')->sortable()->toggleable(isToggledHiddenByDefault :true),
                 ToggleColumn::make('isvisible')->toggleable()->sortable(),//->boolean(),
@@ -158,6 +158,10 @@ class ProductResource extends Resource
             ]);
     }
     
+    public static function getNavigationBadge(): ?string
+    {
+            return static::getModel()::count();
+    }
     public static function getRelations(): array
     {
         return [

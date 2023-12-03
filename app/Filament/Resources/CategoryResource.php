@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\CategoryResource\RelationManagers\ProductsRelationManager;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Category;
@@ -10,6 +11,7 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Group;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,7 +25,13 @@ class CategoryResource extends Resource
     protected static ?string $navigationGroup=  'Shop'; 
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
-
+    protected static ?string $recordTitleAttribute=  'name'; 
+   
+   public static function getGlobalSearchResultDetails(Model $record):array{
+    return[
+        'Category'=>$record->id,
+    ];
+   } 
     public static function form(Form $form): Form
     {
         return $form
@@ -69,7 +77,7 @@ class CategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ProductsRelationManager::class
         ];
     }
     

@@ -16,6 +16,6 @@ class category extends Model
     ];
     public function products(): HasMany
     {
-        return $this->hasMany(product::class, 'chat_id');
+        return $this->hasMany(product::class, 'category_id');
     }
 }

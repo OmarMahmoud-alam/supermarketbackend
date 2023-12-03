@@ -13,7 +13,7 @@ class Order_product extends Model
         'order_id',
         'product_id',
         'quantity',
-        'subtotal'
+        'unit_price',
 
     ];
     public function product(): BelongsTo
@@ -23,6 +23,6 @@ class Order_product extends Model
     
     public function order(): BelongsTo
     {
-        return $this->belongsTo(order::class, 'product_id', 'id');
+        return $this->belongsTo(order::class, 'order_id', 'id');
     }
 }

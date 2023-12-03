@@ -2,21 +2,23 @@
 
 namespace App\Providers\Filament;
 
-use Filament\Http\Middleware\Authenticate;
-use Filament\Http\Middleware\DisableBladeIconComponents;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Panel;
-use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
 use Filament\Widgets;
-use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Filament\PanelProvider;
+use Filament\Navigation\MenuItem;
+use Filament\Support\Colors\Color;
+use Filament\Navigation\NavigationItem;
+use Filament\Http\Middleware\Authenticate;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
-use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Http\Middleware\DisableBladeIconComponents;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -29,7 +31,25 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->favicon('https://images.squarespace-cdn.com/content/v1/575a6067b654f9b902f452f4/1552683653140-0UUVQSSUEWVC73AWAEQG/300Logo.png')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => 'rgb(103, 76, 196)',
+
+                // 'primary' => Color::Amber,
+            ])
+            ->sidebarCollapsibleOnDesktop()
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Settings')
+                    ->url('')
+                    ->icon('heroicon-o-cog-6-tooth'),
+                'logout' => MenuItem::make()->label('Log Out')
+            ])
+            ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
+            ->navigationItems([
+                NavigationItem::make('Blog')
+                    ->url('https://blog.codewithdary.com', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-pencil-square')
+                    ->group('External')
+                    ->sort(2)
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

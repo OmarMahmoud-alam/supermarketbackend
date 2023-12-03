@@ -11,15 +11,18 @@ class order extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id',
-        'totalAmount',
+        'custom_id',
+        'number',
+        'total_price',
         'status',
-        
+        'shipping_price',
+        'notes',
+        'deleted_at'
 
     ];
     public function custom(): BelongsTo
     {
-        return $this->belongsTo(Custom::class, 'user_id', 'id');
+        return $this->belongsTo(Custom::class, 'custom_id', 'id');
     }
     public function product(): HasMany
     {

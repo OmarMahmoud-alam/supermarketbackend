@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.editable {
+    cursor: pointer;
+}
+
+.editing {
+    background-color: #f0f0f0; /* Change to the desired background color for editing */
+}

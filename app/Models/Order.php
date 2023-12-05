@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class order extends Model
 {
     use HasFactory;
+    protected $appends = ['total_price2','product_order'];
+
     protected $fillable = [
         'custom_id',
         'number',
@@ -24,8 +26,33 @@ class order extends Model
     {
         return $this->belongsTo(Custom::class, 'custom_id', 'id');
     }
-    public function product(): HasMany
+    public function ordersproduct(): HasMany
     {
         return $this->hasMany(Order_product::class, 'order_id');
+    }
+    public function getTotalPrice2Attribute()
+    {
+        $totalProductPrice = $this->ordersproduct->sum(function ($product) {
+            return $product->quantity * $product->unit_price;
+        });
+
+        return $totalProductPrice + $this->shipping_price;
+    }
+    public function getProductOrderAttribute()
+    {
+        if ($this->ordersproduct->isEmpty()) {
+            return 'No products';
+        }
+
+        $formattedProducts = $this->ordersproduct->map(function ($orderProduct) {
+            $product = $orderProduct->product;
+
+            if ($product) {
+                return $product->name . ' (' . $orderProduct->unit_price . ')';
+            }
+
+        });
+
+        return $formattedProducts;      
     }
 }

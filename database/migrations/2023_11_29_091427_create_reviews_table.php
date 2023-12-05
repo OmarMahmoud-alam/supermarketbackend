@@ -14,18 +14,15 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('street_address');
-            $table->string('city');
-            $table->string('state');
-            $table->string('postal_code');
-            $table->string('country');
-            $table->decimal('latitude', 10, 7)->nullable();
-            $table->decimal('longitude', 10, 7)->nullable();
+            $table->unsignedBigInteger('product_id');
+            $table->text('comment');
+            $table->integer('rating');
             $table->timestamps();
 
             // Foreign key relationship
             $table->foreign('user_id')->references('id')->on('customs');
-        
+            $table->foreign('product_id')->references('id')->on('products');
+
         });
     }
 

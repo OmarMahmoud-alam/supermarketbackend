@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Enums\OrderStatusEnum;
 use Filament\Resources\Resource;
+use App\Livewire\OrderProductsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\OrderResource\Pages;
@@ -21,8 +22,10 @@ class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
     protected static ?string $navigationGroup=  'Shop'; 
+    protected static ?int $navigationSort=  4; 
+
     protected static ?string $recordTitleAttribute=  'number'; 
 
     public static function form(Form $form): Form
@@ -50,20 +53,20 @@ class OrderResource extends Resource
                                 ->numeric()
                                 ->required(),
 
-                            Forms\Components\Select::make('type')
+                            Forms\Components\Select::make('status')
                             ->options([
                                 'pending' => OrderStatusEnum::PENDING->value,
                                 'processing' => OrderStatusEnum::PROCESSING->value,
                                 'completed' => OrderStatusEnum::COMPLETED->value,
                                 'declined' => OrderStatusEnum::DECLINED->value,
-                            ])->required(),
+                            ]),
 
                             Forms\Components\MarkdownEditor::make('notes')
                                 ->columnSpanFull()
                         ])->columns(2),
                     Forms\Components\Wizard\Step::make('Order_product')
                         ->schema([
-                            Forms\Components\Repeater::make('product')
+                            Forms\Components\Repeater::make('ordersproduct')
                                 ->relationship()
                                 ->schema([
                                     Forms\Components\Select::make('product_id')
@@ -106,9 +109,12 @@ class OrderResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('number')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()    
+                    ->copyable()
+                    ->copyMessage('Copied!')
+                    ->copyMessageDuration(1500),
 
-               TextColumn::make('customer.name')
+               TextColumn::make('custom.name')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
@@ -116,23 +122,43 @@ class OrderResource extends Resource
                 TextColumn::make('status')
                     ->searchable()
                     ->sortable(),
-
-                TextColumn::make('product_sum_subtotal')
+                 TextColumn::make('total_price2')
+                    ->label('Total Price'),
+                    TextColumn::make('product_order')
+                    ->label('Products') ->listWithLineBreaks()
+                    ->limitList(4) ->toggleable(),
+              /*  TextColumn::make('product_sum_subtotal')
                     ->sum('product', 'subtotal')
                     ->label('Total product')
                     ->toggleable(),
+              */
+              TextColumn::make('ordersproduct.product.name')
+              ->label('product name')
+              ->listWithLineBreaks()
+              ->bulleted()
+              ->limitList(4) ->toggleable()
 
-                TextColumn::make('created_at')
+            //  ->expandableLimitedList()
+              ->bulleted(),
+             /* TextColumn::make('ordersproduct.quantity')
+              ->label(__('wallets.fields.currency_code'))
+              ->toggleable()
+              ->formatStateUsing(function ($state, Order $record) {
+                return "statuses. {$state}";
+                
+              }),*/
+                  TextColumn::make('created_at')
                     ->label('Order Date')
                     ->date(),
             ])
+            
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
+                  //  Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make()
                 ])
             ])

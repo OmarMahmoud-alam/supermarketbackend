@@ -31,8 +31,9 @@ use App\Filament\Resources\ProductResource\RelationManagers;
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?string $navigationGroup=  'Shop'; 
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
+    protected static ?int $navigationSort=  2; 
     protected static ?string $recordTitleAttribute=  'name'; 
     protected static ?string $navigationLabel=  'Products'; 
     public static function form(Form $form): Form

@@ -2,52 +2,50 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\RelationManagers\ProductsRelationManager;
 use Filament\Forms;
+use Filament\Forms\Components\Toggle;
 use Filament\Tables;
-use App\Models\Category;
+use App\Models\Banner;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Group;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\CategoryResource\Pages;
+use App\Filament\Resources\BannerResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\CategoryResource\RelationManagers;
+use App\Filament\Resources\BannerResource\RelationManagers;
 
-class CategoryResource extends Resource
+class BannerResource extends Resource
 {
-    protected static ?string $model = Category::class;
-    protected static ?string $navigationGroup=  'Shop'; 
-    protected static ?int $navigationSort=  3; 
+    protected static ?string $model = Banner::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup=  'decoration'; 
+
     protected static ?string $recordTitleAttribute=  'name'; 
-   
-   public static function getGlobalSearchResultDetails(Model $record):array{
-    return[
-        'Category'=>$record->id,
-    ];
-   } 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Group::make()->schema([
                     Forms\Components\Section::make('basic data')->schema([
-                         TextInput::make('name')
+                         TextInput::make('alt')
                          ->required()
                          ->unique(),
+                         Toggle::make('isvisible')
+                         ->required()
+                         ->label ('visibilaty')
+                         ->default(true),
                          FileUpload::make('image')->required()->image()->imageEditor(),
                 
-                    ])->collapsible(),
-                    
+                    ])->collapsible(),])
 
-                ]),
+
             ]);
     }
 
@@ -55,9 +53,10 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')->searchable()->sortable()->toggleable(),
-                Tables\Columns\ImageColumn::make('image')->toggleable(),
-                TextColumn::make('name')->searchable()->sortable(),
+                ImageColumn::make('image'),
+
+                TextColumn::make('alt')->toggleable()->searchable()->sortable(),          
+               ToggleColumn::make('isvisible')->sortable(),//->boolean(),
             ])
             ->filters([
                 //
@@ -78,16 +77,16 @@ class CategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            ProductsRelationManager::class
+            //
         ];
     }
     
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListBanners::route('/'),
+            'create' => Pages\CreateBanner::route('/create'),
+            'edit' => Pages\EditBanner::route('/{record}/edit'),
         ];
     }    
 }

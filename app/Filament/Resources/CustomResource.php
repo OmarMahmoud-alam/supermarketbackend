@@ -20,7 +20,8 @@ class CustomResource extends Resource
 {
     protected static ?string $model = Custom::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
+    protected static ?string $navigationGroup=  'decoration'; 
     protected static ?string $recordTitleAttribute=  'email'; 
 
     public static function form(Form $form): Form
@@ -39,6 +40,7 @@ class CustomResource extends Resource
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                  Tables\Columns\TextColumn::make('email')->sortable()->toggleable(),
+
                  IconColumn::make('email_verified_at')
                      ->icon(fn (string $state): string => match ($state) {
                         null => 'heroicon-s-x',
@@ -48,8 +50,10 @@ class CustomResource extends Resource
     
                             default => 'success',
                         })->toggleable(),
-                        TextColumn::make('phone')->searchable(),
+                        
+                TextColumn::make('phone')->searchable(),
                  Tables\Columns\TextColumn::make('date_of_birth')->sortable()->date()->toggleable(),
+                 Tables\Columns\TextColumn::make('orders_count')->counts('orders') ->sortable()->toggleable(),
                  Tables\Columns\TextColumn::make('created_at')->sortable()->toggleable(isToggledHiddenByDefault :true)->date(),
                               ])
             ->filters([

@@ -49,7 +49,7 @@ class AdminPanelProvider extends PanelProvider
                     ->url('https://blog.codewithdary.com', shouldOpenInNewTab: true)
                     ->icon('heroicon-o-pencil-square')
                     ->group('External')
-                    ->sort(2)
+                    ->sort(4)
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

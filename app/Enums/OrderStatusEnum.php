@@ -6,6 +6,7 @@ enum OrderStatusEnum:string{
     case PROCESSING = 'processing';
     case COMPLETED = 'completed';
     case DECLINED = 'declined';
+    case CANCELED = 'canceled';
     
 
 }

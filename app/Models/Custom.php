@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Sanctum\HasApiTokens;
-
 use Illuminate\Database\Eloquent\Model;
+
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
@@ -26,7 +27,6 @@ class Custom extends Authenticatable
         'email',
         'password',
         'phone',
-        'date',
         'date_of_birth',
     ];
 
@@ -57,13 +57,18 @@ class Custom extends Authenticatable
     {
         return $this->hasMany(Addresse::class, 'user_id');
     }
-    public function carts(): HasOne
+    public function cartItems(): HasMany
     {
-        return $this->hasOne(Cart::class, 'user_id');
+        return $this->hasMany(Cart::class, 'user_id');
     }
     
-    public function reviews(): HasMany
+    public function reviews(): BelongsToMany
     {
-        return $this->hasMany(Review::class, 'user_id');
+        return $this->belongsToMany(Review::class, 'user_id');
     }
+    public function favoriteProducts()
+    {
+        return $this->belongsToMany(product::class, 'favourtes','user_id');
+    }
+
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class order extends Model
 {
@@ -16,6 +17,8 @@ class order extends Model
         'custom_id',
         'number',
         'total_price',
+        'delivery_type',
+        'address_id',
         'status',
         'shipping_price',
         'notes',
@@ -29,6 +32,10 @@ class order extends Model
     public function ordersproduct(): HasMany
     {
         return $this->hasMany(Order_product::class, 'order_id');
+    }
+    public function addresse(): HasOne
+    {
+        return $this->hasOne(Addresse::class, 'address_id');
     }
     public function getTotalPrice2Attribute()
     {

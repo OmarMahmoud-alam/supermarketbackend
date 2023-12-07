@@ -59,6 +59,8 @@ class OrderResource extends Resource
                                 'processing' => OrderStatusEnum::PROCESSING->value,
                                 'completed' => OrderStatusEnum::COMPLETED->value,
                                 'declined' => OrderStatusEnum::DECLINED->value,
+                                'canceled' => OrderStatusEnum::CANCELED->value,
+                              
                             ]),
 
                             Forms\Components\MarkdownEditor::make('notes')
@@ -122,6 +124,11 @@ class OrderResource extends Resource
                 TextColumn::make('status')
                     ->searchable()
                     ->sortable(),
+                    TextColumn::make('shipping_price')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+
                  TextColumn::make('total_price2')
                     ->label('Total Price'),
                     TextColumn::make('product_order')
@@ -132,14 +139,14 @@ class OrderResource extends Resource
                     ->label('Total product')
                     ->toggleable(),
               */
-              TextColumn::make('ordersproduct.product.name')
+              /*TextColumn::make('ordersproduct.product.name')
               ->label('product name')
               ->listWithLineBreaks()
               ->bulleted()
               ->limitList(4) ->toggleable()
 
             //  ->expandableLimitedList()
-              ->bulleted(),
+              ->bulleted(),*/
              /* TextColumn::make('ordersproduct.quantity')
               ->label(__('wallets.fields.currency_code'))
               ->toggleable()

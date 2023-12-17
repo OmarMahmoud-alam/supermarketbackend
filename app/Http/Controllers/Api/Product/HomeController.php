@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Api\Product;
 
-use App\Http\Resources\CategoryResource;
 use App\Models\Banner;
 use App\Models\product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\ProductCategoryResource;
 
 class HomeController extends Controller
 {
@@ -28,27 +30,48 @@ class HomeController extends Controller
              return response()->json(['error'=>'currentPage must be number '], 200);
 
         }
-        $categories = Category::with(['products' => function ($query) {
-            $query->where('isvisible', 1)->take(5); // Retrieve at most 5 products for each category
-        }])->get();
+        $categories = Category::all();
+       /* $sales = DB::table('products')
+            ->leftJoin('order_products','products.id','=','order_products.product_id')
+            ->selectRaw('products.*, COALESCE(sum(order_products.quantity),0) total')
+            ->groupBy('products.id')
+            ->orderBy('total','desc')
+            ->take(1)
+            ->get();*/
+          /*  $topSellingProducts = product::with('category')
+             ->leftJoin('order_products', 'products.id', '=', 'order_products.product_id')
+            ->select('products.*', DB::raw('COALESCE(SUM(order_products.quantity), 0) as total'))
+             ->groupBy('products.id', 'products.name')
+            ->orderByDesc('total')
+             ->take(5)
+            ->get();
+*/
+            $topSellingProducts =product::with('category')
+            ->leftJoin('order_products', 'products.id', '=', 'order_products.product_id')
+            ->select('products.*', DB::raw('COALESCE(SUM(order_products.quantity), 0) as total'))
+            ->groupBy('products.id' ) 
+            ->orderByDesc('total')
+            ->where('isvisible',1)
+            ->take(5)
+            ->get();
 
-        $result = [];
         $banner=Banner::where('isvisible',1)->get();
 
-        foreach ($categories as $category) {
+       /* foreach ($categories as $category) {
             $result[] = [
-                'category' => $category->name,
+                'category' => $category,
                 'categoryDetails' => ['name'=>$category->name
                 ,'image_url'=>  asset("storage/{$category->image}")
                 ,'id'=>$category->id],
                 'products' => ProductResource::collection($category->products),
             ];
-        }
+        }*/
 
         $data=[
             'status'=>200,
             'banner'=>$banner,
-            'data'=> $result
+            'category'=> $categories,
+            'product'=>  ProductCategoryResource::collection($topSellingProducts)
             
         ];
         return response()->json($data, 200);

@@ -23,9 +23,8 @@ class ProductCategoryResource extends JsonResource
             'quantity' => $this->quantity,
             'category'=>$this->category->name,
             'category_id'=>$this->category->id,
-            'image_url' => asset("storage/{$this->image}"), // Adjust the path to your images
-           // 'details_url' => route('products.show', ['id' => $this->id]),
-            // Add other product details as needed
+            'image_url' => asset("storage/{$this->image}"),
+             'total'=>$this->total ?? '',
         ];
     }
 }

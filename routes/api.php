@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Product\CartController;
 use App\Http\Controllers\Api\Product\HomeController;
 use App\Http\Controllers\Api\Product\OrderController;
 use App\Http\Controllers\Api\User\AddresseController;
+use App\Http\Controllers\Api\Product\ReviewController;
 use App\Http\Controllers\Api\Product\ProductController;
 use App\Http\Controllers\Api\EmailVerificationController;
 use App\Http\Controllers\Api\Product\FavouriteController;
@@ -52,6 +53,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
   Route::get('home', [HomeController::class, 'index']);
   Route::get('product/{id}',[ProductController::class,'show']);
+  Route::get('product/review/{id}',[ReviewController::class,'showreview']);
+  Route::get('product/myreview/{id}',[ReviewController::class,'showmyreview']);
+  Route::post('product/review',[ReviewController::class,'store']);
   Route::get('product',[ProductController::class,'index']);
   Route::get('productcategory',[ProductController::class,'productCategory']);
   Route::get('/products/filter', [ProductController::class, 'filterProducts']);
@@ -61,12 +65,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
   Route::post('cart', [CartController::class, 'addToCart']);
   Route::post('cart/toorder', [CartController::class, 'createOrder']);
-  Route::get('cart', [CartController::class, 'createOrder']);
+  Route::get('cart', [CartController::class, 'getCart']);
   Route::delete('/cart/{productId}',[CartController::class, 'deleteProductFromCart'] );
 
   Route::post('/orders/{orderId}/cancel', [CartController::class, 'cancelOrder']);
   Route::post('/productorder', [OrderController::class, 'createOrderForProduct']);
-
 
 });
 //addresse

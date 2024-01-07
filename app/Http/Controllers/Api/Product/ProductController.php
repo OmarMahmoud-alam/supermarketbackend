@@ -19,7 +19,7 @@ class ProductController extends Controller
         $product = product::with(['category' => function ($query) {
             $query->select('id', 'name');
         },'review' => function ($query) {
-            $query->where('comment', '!=' , "")->select('id','user_id','product_id', 'comment','rating');
+            $query->where('comment', '!=' , "")->select('id','user_id','product_id', 'comment','rating','created_at');
         },
         'review.user' => function ($query) {
             $query->select('id', 'name', 'email')->get(); // Adjust the fields you want to retrieve

@@ -25,6 +25,7 @@ class ProductCategoryResource extends JsonResource
             'category_id'=>$this->category->id,
             'image_url' => asset("storage/{$this->image}"),
              'total'=>$this->total ?? '',
+             'favorite'=>($this->favorites ) ? count($this->favorites)==0 ? false:true : false
         ];
     }
 }

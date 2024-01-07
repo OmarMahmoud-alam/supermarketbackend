@@ -30,4 +30,8 @@ class product extends Model
     {
         return $this->hasMany(Review::class, 'product_id', 'id');
     }
+        public function favorites()
+    {
+        return $this->belongsToMany(Custom::class, 'favourtes','product_id','user_id');
+    }
 }

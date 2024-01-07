@@ -61,23 +61,28 @@ class CartController extends Controller
 
         // Load the cart items with product information
         $cartItems = $user->cartItems()->with('product')->get();
-
+        $total=0.0;
         // Calculate the subtotal for each cart item
-        $formattedCart = $cartItems->map(function ($cartItem) {
+        $formattedCart = $cartItems->map(function ($cartItem,)use(&$total) {
             $subtotal = $cartItem->quantity * $cartItem->product->price;
-
+            $total=$total+$subtotal;
             return [
-                'product_id' => $cartItem->product->id,
-                'product_name' => $cartItem->product->name,
+                'id' => $cartItem->product->id,
+                'name' => $cartItem->product->name,
+                'brand' => $cartItem->product->brand,
+                'type' => $cartItem->product->type,
                 'quantity' => $cartItem->quantity,
                 'price' => $cartItem->product->price,
-                'subtotal' => $subtotal,
+                'category_id'=>$cartItem->product->category->id,
+                'category'=>$cartItem->product->category->name,
+                'image_url' => asset("storage/{$cartItem->product->image}"),
+                'total' => $subtotal,
                 // Add other product details if needed
             ];
         });
 
         // Return the formatted cart data
-        return response()->json(['cart' => $formattedCart]);
+        return response()->json(['cart' => $formattedCart,'totalprice'=>$total]);
     }
     //delete product from cart
     public function deleteProductFromCart($productId)

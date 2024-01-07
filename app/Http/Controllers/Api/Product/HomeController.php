@@ -31,23 +31,15 @@ class HomeController extends Controller
 
         }
         $categories = Category::all();
-       /* $sales = DB::table('products')
-            ->leftJoin('order_products','products.id','=','order_products.product_id')
-            ->selectRaw('products.*, COALESCE(sum(order_products.quantity),0) total')
-            ->groupBy('products.id')
-            ->orderBy('total','desc')
-            ->take(1)
-            ->get();*/
-          /*  $topSellingProducts = product::with('category')
-             ->leftJoin('order_products', 'products.id', '=', 'order_products.product_id')
-            ->select('products.*', DB::raw('COALESCE(SUM(order_products.quantity), 0) as total'))
-             ->groupBy('products.id', 'products.name')
-            ->orderByDesc('total')
-             ->take(5)
-            ->get();
-*/
-            $topSellingProducts =product::with('category')
+        $customerId=$request->user()->id;
+            $topSellingProducts =product::with('category')->with(['favorites' => function ($hasMany) use ($customerId){
+                $hasMany->where('user_id', $customerId);
+            }])
             ->leftJoin('order_products', 'products.id', '=', 'order_products.product_id')
+           /* ->leftJoin('favorites', function ($join) use ($customerId) {
+                $join->on('products.id', '=', 'favorites.product_id')
+                    ->where('favourtes.user_id', '=', $customerId);
+            })*/
             ->select('products.*', DB::raw('COALESCE(SUM(order_products.quantity), 0) as total'))
             ->groupBy('products.id' ) 
             ->orderByDesc('total')
@@ -68,10 +60,10 @@ class HomeController extends Controller
         }*/
 
         $data=[
-            'status'=>200,
+            'status'=>'success',
             'banner'=>$banner,
             'category'=> $categories,
-            'product'=>  ProductCategoryResource::collection($topSellingProducts)
+            'product'=>ProductCategoryResource::collection($topSellingProducts)
             
         ];
         return response()->json($data, 200);
